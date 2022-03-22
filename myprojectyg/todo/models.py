@@ -12,9 +12,10 @@ class Person(models.Model):
         
 class Task(models.Model):
     """a particular to-do item"""
+    isdone = models.BooleanField(default=False)
     name = models.CharField(max_length=50, help_text='a short name for the task')
-    name = models.CharField(max_length=255, help_text='description of task')
-    weblink = models.URLField(help_text = 'a web site link')
+    details = models.TextField(max_length=255, help_text='description of task')#large text field #max_length not enforced in DB
+    weblink = models.URLField(help_text = 'a web site link', blank=True, null=True)#blank allows you to pass it a null value, but null tells the database to accept null values
     creation_date = models.DateField(verbose_name='date created')
     creator = models.ForeignKey(Person, on_delete=models.CASCADE) #what to do if referenced object is deleted
     #other actions: PROTECT, SET_NULL, SET_DEFAUALT
