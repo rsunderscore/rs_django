@@ -68,13 +68,28 @@ views - should prepare any data necessary for the template and pass it in the co
 		- UpdateView - 
 		- DeleteView (pg 563)
 
-static files
-- look this up
+## static files
+- django not intended to serve static - standard web server would do that - just a stopgap for dev purposes
+	- also facilitates locating files - change a value in settings.py to remap files - value to be changed varies based on the finder
+	- retrieving that static file ties up the python process - so performance rapidly degrades in multi-user setup
+- management commands
+	- findstatic - takes filename as input and shows what paths were searched
+	- collectstic - bundles static assets for upload to a server directory
+- static template tag - used to convert a filename to a URL or path that can be used in a template
+- finder - utility that translate url location to asset location on disk
+	- AppDirectoriesFinder - searches app subdirectories (static folder) for assets
+	- FileSystemFinder - searches specified folder locations (e.g. for assets shared across multiple apps)
 
-styles
-- bootstrap
+## integration with frontend JavaScript (Ch 15)
+- e.g. React
 
-admin - CRUD operations 
+## styles
+- bootstrap (p 146) - https://getbootstrap.com/docs/4.4/getting-started/introduction/
+	- https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+- specifc styles provided via classes (e.g. btn-primary)
+- other styles served as static files
+
+## admin - CRUD operations 
 	- usually sufficient for smaller apps
 	- need to register models for them to appear in the interface - update the admin.py file
 		- import the model classes
@@ -114,14 +129,14 @@ admin - CRUD operations
 				- `exclude = ('field1', 'field2'...)` in the subclass of modelAdmin
 				- `fields = ('list', 'of', 'fields', ...)` can be used to include only specified fields if it is easier than excluding
 				- `fieldsets = ` iter of group names followed by a dict with {'fields':('field1' ,'field2') to produce an interface with fields grouped and ordered
-forms
+## forms
 - look this up
 - csrf token - cross-site request forgery
 	- look this up
 - request.method passed in context dict as 'method': request.method
 	- data passed with request.GET or request.POST QueryDict
 
-templates
+## templates
 - html files with special tags for vars {{ }} and logic {% %}
 - inheritance
 - ideally each app will have its own child templates folder 
@@ -129,7 +144,7 @@ templates
 - custom template tags
 	 - live inside the templatetags subdir for each app
 
-models
+## models
 - tables are defined as classes that extend models.Model
 - after changing
 	1. python manage.py makemigrations appname
