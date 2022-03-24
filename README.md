@@ -90,45 +90,45 @@ views - should prepare any data necessary for the template and pass it in the co
 - other styles served as static files
 
 ## admin - CRUD operations 
-	- usually sufficient for smaller apps
-	- need to register models for them to appear in the interface - update the admin.py file
-		- import the model classes
-		- admin.site.register(modelname) for each model
-	- subclass AdminSite and AdminConfig to integrate app adminstration with users/groups admin
-		- auto-discovery integration with native is done by (combination of book and django docs)
-			- create an admin.py in root folder (root of the project - not the app subdir)
-				- define a child class of admin.AdminSite
-				- can customize title_header, site_header, and index_title
-			- create an apps.py in root folder with a class instance
-				- create a sublcass of `django.contrib.admin.apps` AdminConfig class with default_site set to 'admin.NewAdminName' (from your admin.py file)
-			- modify installed apps in config to point  to the new apps file and the config class - e.g. 'apps.myCustomAdminConfig', 
-		- "When you put 'django.contrib.admin' in your INSTALLED_APPS setting, Django automatically looks for an admin module in each application and imports it." - https://docs.djangoproject.com/en/4.0/ref/contrib/admin/
-			- AdminConfig calls autodiscover when imported (which gets admin.py files in app subdirs)
-			- overriding default admin site = https://docs.djangoproject.com/en/4.0/ref/contrib/admin/#overriding-default-admin-site
-	- subclass ModelAdmin (appname/admin.py) to customize model list and detail views
-		- create a subclass of ModelAdmin for each model type in appname/admin.py
-		- when registering the model add a second param for the new subclass e.g. `admin.site.register(Book, BookAdmin)`
-		- list_display - default listing is based on the __str__ function defined in the model (pg 198)
-			- set `list_display = ` - any of these work:
-				- `('field1','field2')`#a tuple of fields from the model taht you want
-				- function that takes the model instance as arg 
-				- Method from ModelAdmin subclass that takes model as arg
-				- method of the model class (if it accepts model obj as arg i.e. self)
-			- computed fields cannot be sorted in the admin interface (e.g. reformatted)
-			- cannot include a Many-to-many field
-			- list_filter
-				- enabling a drop-down for the provided fields that limits displayed records -  controlled with list_filter attribute of a ModelAdmin subclass
-			- date_hierarchy - filters rows by date with links above the table display
-			- search_fields - enables the search box to look for text in the specified fields
-				- use two underscores to search on a foreign_key field (e.g. 'publisher__name')
-				- default is contains - append '__exact' to fields that should be matched exactly (e.g. isbn__exact)
-				- can also use '__startswith' appended to field name
-		- customizing detail views
-			- hide fields 
-				- will be hidden if model field is defined with auto (e.g. auto_now_add for a date field)
-				- `exclude = ('field1', 'field2'...)` in the subclass of modelAdmin
-				- `fields = ('list', 'of', 'fields', ...)` can be used to include only specified fields if it is easier than excluding
-				- `fieldsets = ` iter of group names followed by a dict with {'fields':('field1' ,'field2') to produce an interface with fields grouped and ordered
+- usually sufficient for smaller apps
+- need to register models for them to appear in the interface - update the admin.py file
+	- import the model classes
+	- admin.site.register(modelname) for each model
+- subclass AdminSite and AdminConfig to integrate app adminstration with users/groups admin
+	- auto-discovery integration with native is done by (combination of book and django docs)
+		- create an admin.py in root folder (root of the project - not the app subdir)
+			- define a child class of admin.AdminSite
+			- can customize title_header, site_header, and index_title
+		- create an apps.py in root folder with a class instance
+			- create a sublcass of `django.contrib.admin.apps` AdminConfig class with default_site set to 'admin.NewAdminName' (from your admin.py file)
+		- modify installed apps in config to point  to the new apps file and the config class - e.g. 'apps.myCustomAdminConfig', 
+	- "When you put 'django.contrib.admin' in your INSTALLED_APPS setting, Django automatically looks for an admin module in each application and imports it." - https://docs.djangoproject.com/en/4.0/ref/contrib/admin/
+		- AdminConfig calls autodiscover when imported (which gets admin.py files in app subdirs)
+		- overriding default admin site = https://docs.djangoproject.com/en/4.0/ref/contrib/admin/#overriding-default-admin-site
+- subclass ModelAdmin (appname/admin.py) to customize model list and detail views
+	- create a subclass of ModelAdmin for each model type in appname/admin.py
+	- when registering the model add a second param for the new subclass e.g. `admin.site.register(Book, BookAdmin)`
+	- list_display - default listing is based on the __str__ function defined in the model (pg 198)
+		- set `list_display = ` - any of these work:
+			- `('field1','field2')`#a tuple of fields from the model taht you want
+			- function that takes the model instance as arg 
+			- Method from ModelAdmin subclass that takes model as arg
+			- method of the model class (if it accepts model obj as arg i.e. self)
+		- computed fields cannot be sorted in the admin interface (e.g. reformatted)
+		- cannot include a Many-to-many field
+		- list_filter
+			- enabling a drop-down for the provided fields that limits displayed records -  controlled with list_filter attribute of a ModelAdmin subclass
+		- date_hierarchy - filters rows by date with links above the table display
+		- search_fields - enables the search box to look for text in the specified fields
+			- use two underscores to search on a foreign_key field (e.g. 'publisher__name')
+			- default is contains - append '__exact' to fields that should be matched exactly (e.g. isbn__exact)
+			- can also use '__startswith' appended to field name
+	- customizing detail views
+		- hide fields 
+			- will be hidden if model field is defined with auto (e.g. auto_now_add for a date field)
+			- `exclude = ('field1', 'field2'...)` in the subclass of modelAdmin
+			- `fields = ('list', 'of', 'fields', ...)` can be used to include only specified fields if it is easier than excluding
+			- `fieldsets = ` iter of group names followed by a dict with {'fields':('field1' ,'field2') to produce an interface with fields grouped and ordered
 ## forms
 - look this up
 - csrf token - cross-site request forgery
