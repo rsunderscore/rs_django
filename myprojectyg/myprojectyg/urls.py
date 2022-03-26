@@ -22,5 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', todo.views.index), 
     path('search/', todo.views.search),
+    path('showform.html', todo.views.formview),
+    path('showform2.html', todo.views.MyFormView),
     path('CBVtest', todo.views.MyView.as_view(), name='index_view'),
 ]

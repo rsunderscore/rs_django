@@ -194,7 +194,14 @@ views - should prepare any data necessary for the template and pass it in the co
 'Editor Example', email='PacktEditor2@example.com',
 through_defaults={'role': 'EDITOR'})` pg 111
 
-SECRET_KEY pg 675
+### integration with existing DB
+- configure connection then run python manage.py inspectdb > models.py (generates python classes that align with existing tables) adjust if needed
+	- generated classes have attribute `manged = False` which means that migrate won't touch them
+	- https://docs.djangoproject.com/en/4.0/ref/django-admin/ 
+	- can append a space separated list of tables to look examine
+	- flag to include-views
+
+### SECRET_KEY pg 675
 - 3rd party lib django Configurations has a values.SecretValue module
 - store in ENV variable and retrieve with os.environ.get('keyname', default)
 - 50 character random string
