@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>Task Detail {{ id }}</h3>
+
+<table border =1 cellspacing=40 cellpadding=4>
+	<tr><th>completed?</th><td>{{ task.isdone }}</td></tr>
+	<tr><th>name</th><td>{{ task.name }}</td></tr>
+	<tr><th>details</th><td>{{ task.details }}</td></tr>
+	<tr><th>creator</th><td>{{ task.creator }}</td></tr>
+	<tr><th>creation date</th><td>{{ task.creation_date }}</td></tr>
+</table>
+{% endblock %}

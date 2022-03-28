@@ -135,6 +135,19 @@ views - should prepare any data necessary for the template and pass it in the co
 	- look this up
 - request.method passed in context dict as 'method': request.method
 	- data passed with request.GET or request.POST QueryDict
+- custom validation - solution to choose varies by use case
+	- override clean method in form class - use `self.add_error('field', 'msg')`
+	- add a per-field clean method (e.g. `clean_username(self)` and raise django.core.exceptions.ValidationError for issues; **must** return value)
+	- add custom validation function that takes value as param and raises ValidationError for issues (no return) 
+- attrs - a form field attribute that takes a dict of additional settings
+	-"placeholder" - added with placeholder attribute to the form field
+-initial values - added with initial attribute to the form field
+	- can also be set with initial attribute to Form - dict of field names and values
+	
+- ModelForms - used to auto create forms from models `class modelnameForm(forms.ModelForm): class Meta: model=modelname fields=('tuple','of','fieldnames')`
+	- fields can be '__all__' to use all fields
+	- include a subclass Meta with attributes to specify the model to use and the fields to include (or exclude)
+		- best to avoid exclude so that special fields are not accidentally exposed
 
 ## templates
 - html files with special tags for vars {{ }} and logic {% %}
