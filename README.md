@@ -129,6 +129,25 @@ views - should prepare any data necessary for the template and pass it in the co
 			- `exclude = ('field1', 'field2'...)` in the subclass of modelAdmin
 			- `fields = ('list', 'of', 'fields', ...)` can be used to include only specified fields if it is easier than excluding
 			- `fieldsets = ` iter of group names followed by a dict with {'fields':('field1' ,'field2') to produce an interface with fields grouped and ordered
+##auth
+1. add to urls.py urlpatterns `path('accounts', include(('django.contrib.auth.urls','auth'),namespace='accounts')),`
+	1. routes: login, logout, password_change, password_change/done, password_reset, password_reset/done, rest/<uidb64>/<token>, reset/done, 
+1. copy common views from django admin package to templates/registration
+	1. everything in <envloc>\lib\site-packages\django\contrib\admin\templates\registration
+		1. full list(8 html files): password_reset_email, password_change_form, password_change_done, password_reset_form, password_reset_done, password_reset_confirm, password_reset_complete, logged_out
+	1. login.html from <envloc>\lib\site-packages\django\contrib\admin\templates\admin
+	1. envloc can be determined by running `import sys` and then `sys.path`
+1. to verify routing and templates are functioning, go to:  127.0.0.1:8000/accounts/login 
+1. modify the copied templates to go with your site - e.g. 
+	1. extend base.html rather than admin/base_site.html
+	1. copy conent_title and reset_link block text into content block
+	1. remove unused blocks
+	1. replace reverse urls with namespaced equivalents (e.g. 'login' becomes 'accounts:login')
+		1. in some cases the url is set in a variable that is later reference
+	1. login.html 
+		1. ok to remove all blocks except content
+1. add a profile view and template (login redirects to it by default)
+
 ## forms
 - look this up
 - csrf token - cross-site request forgery
