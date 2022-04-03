@@ -56,7 +56,7 @@ views - should prepare any data necessary for the template and pass it in the co
 	- render (from django.shortcuts import render) - to render a template
 		- params: request, templatename, context_dict
 		- context_dict specifies what names are available to the html
-- class based views (CBV) - less readable but easier to write (pg 131, 553)
+- class based views (CBV) - less readable but easier to write (pg 131, 553) - used to handle multiple request types
 	- built-in 
 		- View - base class for all CBVs
 		- TemplateView - render template based on parameters from url
@@ -79,6 +79,11 @@ views - should prepare any data necessary for the template and pass it in the co
 - finder - utility that translate url location to asset location on disk
 	- AppDirectoriesFinder - searches app subdirectories (static folder) for assets
 	- FileSystemFinder - searches specified folder locations (e.g. for assets shared across multiple apps)
+	
+## MEDIA - uploads, files/images
+- SETTINGS
+- store on disk directly
+- store on disk with path in a model
 
 ## integration with frontend JavaScript (Ch 15)
 - e.g. React
@@ -129,24 +134,40 @@ views - should prepare any data necessary for the template and pass it in the co
 			- `exclude = ('field1', 'field2'...)` in the subclass of modelAdmin
 			- `fields = ('list', 'of', 'fields', ...)` can be used to include only specified fields if it is easier than excluding
 			- `fieldsets = ` iter of group names followed by a dict with {'fields':('field1' ,'field2') to produce an interface with fields grouped and ordered
+
 ##auth
-1. add to urls.py urlpatterns `path('accounts', include(('django.contrib.auth.urls','auth'),namespace='accounts')),`
-	1. routes: login, logout, password_change, password_change/done, password_reset, password_reset/done, rest/<uidb64>/<token>, reset/done, 
-1. copy common views from django admin package to templates/registration
-	1. everything in <envloc>\lib\site-packages\django\contrib\admin\templates\registration
-		1. full list(8 html files): password_reset_email, password_change_form, password_change_done, password_reset_form, password_reset_done, password_reset_confirm, password_reset_complete, logged_out
-	1. login.html from <envloc>\lib\site-packages\django\contrib\admin\templates\admin
-	1. envloc can be determined by running `import sys` and then `sys.path`
-1. to verify routing and templates are functioning, go to:  127.0.0.1:8000/accounts/login 
-1. modify the copied templates to go with your site - e.g. 
-	1. extend base.html rather than admin/base_site.html
-	1. copy conent_title and reset_link block text into content block
-	1. remove unused blocks
-	1. replace reverse urls with namespaced equivalents (e.g. 'login' becomes 'accounts:login')
-		1. in some cases the url is set in a variable that is later reference
-	1. login.html 
-		1. ok to remove all blocks except content
-1. add a profile view and template (login redirects to it by default)
+ - re-using the admin auth templates - not working as described  :rage1:
+	- login works because it's not in the admin path for registration - but the others default to using the admin template rather than the app template - not sure why
+		- corrected an issue with urls.py syntax when import auth.urls to tha accounts namespace (paren mismatch)
+	1. add to urls.py urlpatterns `path('accounts', include(('django.contrib.auth.urls','auth'),namespace='accounts')),`
+		1. routes: login, logout, password_change, password_change/done, password_reset, password_reset/done, rest/<uidb64>/<token>, reset/done, 
+	1. copy common views from django admin package to templates/registration
+		1. everything in <envloc>\lib\site-packages\django\contrib\admin\templates\registration
+			1. full list(8 html files): password_reset_email, password_change_form, password_change_done, password_reset_form, password_reset_done, password_reset_confirm, password_reset_complete, logged_out
+		1. login.html from <envloc>\lib\site-packages\django\contrib\admin\templates\admin
+		1. envloc can be determined by running `import sys` and then `sys.path`
+	1. to verify routing and templates are functioning, go to:  127.0.0.1:8000/accounts/login 
+	1. modify the copied templates to go with your site - e.g. 
+		1. extend base.html rather than admin/base_site.html
+		1. copy conent_title and reset_link block text into content block
+		1. remove unused blocks
+		1. replace reverse urls with namespaced equivalents (e.g. 'login' becomes 'accounts:login')
+			1. in some cases the url is set in a variable that is later reference
+		1. login.html 
+			1. ok to remove all blocks except content
+	1. add a profile view and template (login redirects to it by default)
+- use this instead? https://docs.djangoproject.com/en/4.0/topics/auth/default/
+- https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Authentication - this WORKS :tada:
+	- `path('accounts/', include('django.contrib.auth.urls'))`
+	- they suggestion putting registration stuff in a tempaltes subfolder off of project directory and then adding that directory to DIRS in TEMPLATES in settings.py e.g. `os.path.join(BASE_DIR, 'templates')`
+## sessions
+- cookie based, file based, or db based
+- there are laws about sites notifying about cookies now - make sure to notify
+
+## custom tags and filters
+
+
+## REST
 
 ## forms
 - look this up

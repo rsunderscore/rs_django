@@ -25,6 +25,12 @@ def allTasksView(request):
     tasklist = Task.objects.all()
     return render(request, 'alltasks.html', {'fields':fields, 'tasks':tasklist})
 
+def profile(request):
+    return render(request, 'profile.html')
+
+
+def logoutTest(request):
+    return render(request, 'registration/logged_out.html')
 
 def taskdetail(request, id):
     task = Task.objects.get(id=id)
