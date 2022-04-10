@@ -18,7 +18,7 @@
 		{% endif %}
 	
 	</td>
-	<td><a href='taskdetail/{{ t.id }}/'>{{ t.name }}</a></td><td>{{ t.details }}</td><td>{{ t.creator }}</td><td> {{ t.creation_date }}</td>
+	<td><a href='taskdetail/{{ t.id }}/'>{{ t.name }}</a></td><td><pre>{{ t.details }}</pre></td><td>{{ t.creator }}</td><td> {{ t.creation_date }}</td>
  </tr>
 {% endfor %}
 </table>

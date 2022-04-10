@@ -262,3 +262,33 @@ through_defaults={'role': 'EDITOR'})` pg 111
 	- get_random_string - specify a length as first param - 
 	- uses python standard lib secrets module - cryptographically strong random numbers suitable for managing data such as passwords, account authentication, security tokens, and related secrets
 - why are there so many web based apps to generate this key?
+
+## Browser Debug toolbar (i.e. DjDt)
+provides large amounts of information about page parameters, state, db, load times, etc...
+1. conda -c conda-forge install django-debug-toolbar
+1. settings.py 
+	- add `debug_toolbar` to INSTALLED_APPS
+	- add `debug_toolbar.middleware.DebugToolbarMiddleware` to MIDDLEWARE (first or as early in the list as possible)
+	- add `127.0.0.1` to INTERNAL IPS
+	- verify that STATICFILES_DIRS is defined (e.g. `[os.path.join(BASE_DIR, 'static' )]` and that the directory exists (<projdir>/static)
+1. urls.py - add `path('__debug__/', include(debug_toolbar.urls))` add to the end of the list in DEBUG section
+
+
+## MEDIA (i.e) uploads
+1. settings.py 
+	- add a new option to options key of templates setting of  `django.template.context_processors.media`
+	- after STATIC_URL setting add two new settings
+		1. `MEDIA_ROOT = os.path.join(BASE_DIR, 'media')`
+		1. `MEDIA_URL = '/media/' #note trailing slash included so not needed when used`
+	- urls.py 
+		- import settings `from django.conf`
+		- import static from `django.conf.urls.static`
+		- add a conditional if settings.DEBUG section after urlpatterns
+			- append to urlpatterns (+=) `static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT`
+		
+### Misc
+- x-frames-options - used to prevent clickjacking, most browsers / sites use x-frames-options deny so that each page cannot be embedded in a frame
+	- other options: sameorigin = allow if the site is the same, exempt = allow everywhere
+- django messaging framework - https://docs.djangoproject.com/en/4.0/ref/contrib/messages/
+- book says class based views are better but almost all documentation is for function based views and hard to find solutions that work for CBVs as well
+	- e.g. rendering the result on the same page

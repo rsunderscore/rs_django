@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 import todo.views
+from django.conf import settings
+from django.conf.urls.static import static
+import debug_toolbar
 
 
 urlpatterns = [
@@ -27,12 +30,23 @@ urlpatterns = [
     path('alltasks.html', todo.views.allTasksView),
     path('taskdetail/<int:id>/', todo.views.taskdetail),
     path('showform.html', todo.views.formview),
+    path('simple.html', todo.views.SimplePage.as_view()),
+    path('formresp.html', todo.views.FormRespView.as_view()),
     path('taskform.html', todo.views.taskView),
+    path('new_todo', todo.views.TodoCreateView.as_view(), name='todo_create'),
     path('showform2.html', todo.views.MyFormView),
     path('logouttest.html', todo.views.logoutTest),
     path('CBVtest', todo.views.MyView.as_view(), name='index_view'),
 ]
 
+if settings.DEBUG:
+    print('setting DEBUG urls')
+    #add additional DEBUG urls for dev config
+    #media locations for uploads
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    #add debug to the front of urls list
+    urlpatterns = [path('__debug__/',include(debug_toolbar.urls)),] + urlpatterns
+    print(f'urlpatterns is {urlpatterns}')
 # authurls = [<URLPattern 'login/' [name='login']>, 
 #             <URLPattern 'logout/' [name='logout']>, 
 #             <URLPattern 'password_change/' [name='password_change']>, 

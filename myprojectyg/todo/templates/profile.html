@@ -2,9 +2,15 @@
 {% load i18n %}{% comment %}for translations {% endcomment %}
 
 
-{% block title %} {{ title }}{% endblock %}
+{% block title %} Profile{% endblock %}
 
 {% block content %}
-<h1>{{ title }}</h1>
+<h1>Profile</h1>
 <p>this is the profile page</p>
+
+<p> Username: {{ request.user.username }} <br>
+Name: {{ request.user.first_name }} {{ request.user.last_name }}<br>
+Date Joined: {{ request.user.date_joined }}<br>
+Email: {{ request.user.email }}<br>
+Last Login: {{ request.user.last_login }}<br>
 {% endblock %}

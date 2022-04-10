@@ -19,6 +19,8 @@ class ExampleForm(forms.Form):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = '__all__' #fields to include
+        #'isdone'
+        fields = ['isdone', 'name', 'details', 'creation_date', 'weblink', 'creator']#fields = '__all__' #fields to include
         #exclude = None #fields to exclude
-        widgets = {'creation_date':forms.DateInput(attrs={'type':'date'})}
+        widgets = {'name':forms.TextInput(attrs={'placeholder':'task name'}),
+                   'creation_date':forms.DateInput(attrs={'type':'date'})}

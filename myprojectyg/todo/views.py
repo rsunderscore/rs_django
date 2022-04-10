@@ -2,8 +2,11 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.views import View
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
 from django.core import serializers
+from django.views.decorators.clickjacking import xframe_options_sameorigin
+from django.utils.decorators import method_decorator
+
 from .forms import ExampleForm, TaskForm
 from .models import Task
 
@@ -51,6 +54,16 @@ def formview(request):
 def taskListView(request):
     pass
 
+class TodoCreateView(CreateView):
+    #fine unless you need a custom widget, then you might as well use ModelForm
+    model = Task
+    #fields = ['isdone', 'name', 'details', 'creation_date', 'weblink', 'creator']
+    template_name = 'TodoForm.html'
+    success_url = 'simple.html'
+    form_class = TaskForm
+    
+
+
 def taskView(request):
     
     if request.method == 'POST':
@@ -66,6 +79,17 @@ class MainPage(TemplateView):
     #this assumes no context is needed
     template_name = 'base.html'
     
+class SimplePage(TemplateView):
+    #this assumes no context is needed
+    template_name = 'simple.html'
+    
+    #allows the view to be rendered in a frame by passing the x-frames-options header
+    #can also be set globally with django middleware and custom setting
+    #arguably function based views are shorter, esp if having to override something
+    @method_decorator(xframe_options_sameorigin)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+    
 class MyView(View):
     
     def get(self, request):
@@ -75,5 +99,23 @@ class MyFormView(FormView):
     template_name = 'showform.html'
     form_class = ExampleForm
     success_url = 'showform.html'
-    
+
+
+class FormRespView(FormView):
+    template_name = 'formresp.html'
+    form_class = ExampleForm
+    #success_url = '/success/'
+    def form_valid(self, form):
+        #return super().form_valid(form)#HttpResponseRedirect(str(self.success_url))
+        #messages.success()
+        context = self.get_context_data()
+        context['num'] = 11.4
+        return render(self.request, 'formresp.html', context)
+
+    def get_context_data(self, **kwargs):
+        #mynum = kwargs.pop('number', 999)#remove to prevent pass to super?
         
+        context = super().get_context_data(**kwargs)
+        #context['name'] = 'newname'
+        #context['num'] = mynum #kwargs.get('number', 999)
+        return context

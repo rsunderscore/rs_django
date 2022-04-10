@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<form method='get'> <!--action is the page to submit to and target is where (frame or _blank, _self, _parent, _top) -->
+{{ form.as_p }}
+<input type= "submit" />
+
+</form>
+<p>you are {{ request.user }}
+<p><a href="formresp.html">goback </a>
+
+
+{% comment %}
+ or just loop through a var provided by context 
+{% endcomment %}
+{% if request.GET %}
+<h3> Result</h3>
+<p> {{ request.GET.username }}
+<p> number is {{ num }}</p>
+<p> uname {{ form.cleaned_data }}</p>
+<!-- can't embed another page without enabling x-frame optiosn in headers
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
+X-Frame-Options: SAMEORIGIN
+from django.views.decorators.clickjacking import xframe_options_sameorigin
+@xframe_options_sameorigin
+<iframe src = 'simple.html' title='title' height = 600 width = 1000 name='formresult'>
+-->
+
+
+</iframe>
+{% endif %}
+
+{% endblock %}
