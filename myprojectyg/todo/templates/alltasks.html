@@ -7,7 +7,7 @@
 
 <table border =1 cellpadding = 3>
 <tr>
-	<th>done</th><th>name</th><th>details</th><th>creator</th><th>creation date</th>
+	<th>done</th><th>name</th><th>details</th><th>assignee</th><th>creation date</th>
 </th>
 {% for t in tasks %}
  <tr> 
@@ -18,7 +18,7 @@
 		{% endif %}
 	
 	</td>
-	<td><a href='taskdetail/{{ t.id }}/'>{{ t.name }}</a></td><td><pre>{{ t.details }}</pre></td><td>{{ t.creator }}</td><td> {{ t.creation_date }}</td>
+	<td><a href='taskdetail/{{ t.id }}/'>{{ t.name }}</a></td><td><pre>{{ t.details }}</pre></td><td>{{ t.assignee }}</td><td> {{ t.creation_date }}</td>
  </tr>
 {% endfor %}
 </table>

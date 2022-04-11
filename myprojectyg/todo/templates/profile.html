@@ -7,7 +7,18 @@
 {% block content %}
 <h1>Profile</h1>
 <p>this is the profile page</p>
+<p>user object {{ user.is_authenticated }}</p>
+<p>other user props - same as request.user </p> <!-- items from the User model -->
+<ul>
+	<li>name {{ user }}
+	<li>first_name {{ user.first_name }}</li>
+	<li>last_name {{ user.last_name }}</li>
+	<li>last login {{ user.last_login }}</li>
+	<li>email {{ user.email }}</li>
+	<li> is staff {{ user.is_staff }}</li>
+	<li> date joined {{ user.date_joined }} </li>
 
+</ul>
 <p> Username: {{ request.user.username }} <br>
 Name: {{ request.user.first_name }} {{ request.user.last_name }}<br>
 Date Joined: {{ request.user.date_joined }}<br>

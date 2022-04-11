@@ -6,8 +6,8 @@ class PersonAdmin(admin.ModelAdmin):
     search_fields = ('name', 'email',)
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('name', 'creation_date', 'creator', 'isdone')
-    list_filter = ('isdone', 'creator')
+    list_display = ('name', 'creation_date', 'assignee', 'isdone')
+    list_filter = ('isdone', 'assignee')
     date_hierarchy = 'creation_date'
     search_fields = ('name', 'details')
 

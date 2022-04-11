@@ -14,13 +14,24 @@
 	<link rel="stylesheet" href="{% static 'todo/styles.css' %}">
 </head>
 <body>
-{% include "header.html" %}
-
+<table border =0 cellpadding = 10px>
+<tr><td rowspan=4>&nbsp;&nbsp;</td>
+	<td>
+	{% include "header.html" %}
+	</td>
+	<td rowspan=4>&nbsp;&nbsp;</td>
+</tr>
+<tr><td>
 {% include "navbar.html" %}
-
+</td></tr>
+<tr><td>
 {% block content %}
 {% endblock %}
+</td></tr>
+<tr><td>
 template text {{name}}
 {% include "footer.html" %}
+</td></tr>
+</table>
 </body>
 </html>

@@ -1,6 +1,8 @@
 # rs_django
 This will be a django project, and will hold any django apps that I create.
 
+Reference [book code] (https://github.com/PacktPublishing/Web-Development-with-Django/)
+
 1. create django-admin startproject projname pg 5
 2. create manage.py startapp appname pg 23
 3. add app to INSTALLED_APPS in settings.py pg 47
@@ -8,7 +10,7 @@ This will be a django project, and will hold any django apps that I create.
 4. python manage.py createsuperuser pg 153
 5. python manage.py runserver pg 4
 	- python manage.py shell pg 105 - invoke a shell in app context
-5. folder layout
+5. starting folder layout
 projname
 /projname
 	| __init__.py
@@ -160,9 +162,23 @@ views - should prepare any data necessary for the template and pass it in the co
 - https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Authentication - this WORKS :tada:
 	- `path('accounts/', include('django.contrib.auth.urls'))`
 	- they suggestion putting registration stuff in a tempaltes subfolder off of project directory and then adding that directory to DIRS in TEMPLATES in settings.py e.g. `os.path.join(BASE_DIR, 'templates')`
+- access is controlled via the views
+	- decorators from from django.contrib.auth.decorators import 
+		- login_required - redirect user to login then come back here 
+			- login_url param - where to redirect after login (default is page redirected from)
+			- redirect_field_argument param - what the redirect param will be within url (default: next=)
+		- permission_required - limit access to a user with specific permission level e.g. @permission_required('view_group')
+		- user_passes_test - uses a function that takes user as input to pull information about the user and test it - returns False or Truthy (e.g. non-zero) - used for more flexible control of auth
+		- method_decorator - needed if you have a class based view
+	- can also manually invoke `redirect_to_login` function for even more control
+	- check in templates for request.user == AnonymousUser (means they didn't login) or user.is_authenticated
+
+	
+	
 ## sessions
 - cookie based, file based, or db based
 - there are laws about sites notifying about cookies now - make sure to notify
+- request.session
 
 ## custom tags and filters
 
@@ -183,11 +199,11 @@ views - should prepare any data necessary for the template and pass it in the co
 	-"placeholder" - added with placeholder attribute to the form field
 -initial values - added with initial attribute to the form field
 	- can also be set with initial attribute to Form - dict of field names and values
-	
 - ModelForms - used to auto create forms from models `class modelnameForm(forms.ModelForm): class Meta: model=modelname fields=('tuple','of','fieldnames')`
 	- fields can be '__all__' to use all fields
 	- include a subclass Meta with attributes to specify the model to use and the fields to include (or exclude)
 		- best to avoid exclude so that special fields are not accidentally exposed
+- use crispy forms package to integrate with CSS and bootstrap (prettier forms)
 
 ## templates
 - html files with special tags for vars {{ }} and logic {% %}
@@ -233,7 +249,6 @@ views - should prepare any data necessary for the template and pass it in the co
 - model methods
 	- __str__() - change how the str method works - used by default by admin interface to choose how to display records
 	- can also include a method that tells admin interface how to display records
-	
 - create new instances form shell by importing the table class from models and then creating a new one with params as field names and values
 	- insert via objname.save() method
 - if the row is in scope (obj instance, a field may be modified with dot notation `person.name = 'new name'` and then class `person.save()`
@@ -246,6 +261,9 @@ views - should prepare any data necessary for the template and pass it in the co
 	- create method can create a new object and establish  relationship in one step (e.g. `book.contributors.create(first_names='Packtp', last_names=
 'Editor Example', email='PacktEditor2@example.com',
 through_defaults={'role': 'EDITOR'})` pg 111
+- to rename a field - https://thewebdev.info/2022/04/01/how-to-rename-a-model-and-relationship-fields-with-python-django-migrations/
+	- manually create a migration file with migrations.RenameModel or RenameField
+	- run make migrations to run the file? (not migrate?) - https://docs.djangoproject.com/en/4.0/topics/migrations/
 
 ### integration with existing DB
 - configure connection then run python manage.py inspectdb > models.py (generates python classes that align with existing tables) adjust if needed

@@ -1,10 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.views import View
 from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
 from django.core import serializers
 from django.views.decorators.clickjacking import xframe_options_sameorigin
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.utils.decorators import method_decorator
 
 from .forms import ExampleForm, TaskForm
@@ -28,6 +30,7 @@ def allTasksView(request):
     tasklist = Task.objects.all()
     return render(request, 'alltasks.html', {'fields':fields, 'tasks':tasklist})
 
+@login_required
 def profile(request):
     return render(request, 'profile.html')
 
@@ -36,7 +39,9 @@ def logoutTest(request):
     return render(request, 'registration/logged_out.html')
 
 def taskdetail(request, id):
-    task = Task.objects.get(id=id)
+    #task = Task.objects.get(id=id)
+    task = get_object_or_404(Task, id=id)
+    
     #return HttpResponse(f'hello {id} <br> {task}')
     return render(request, 'taskdetail.html', {'id':id, 'task':task})
     
@@ -54,6 +59,8 @@ def formview(request):
 def taskListView(request):
     pass
 
+#Or, more succinctly, you can decorate the class instead and pass the name of the method to be decorated as the keyword argument name:
+@method_decorator(login_required, name='dispatch' )
 class TodoCreateView(CreateView):
     #fine unless you need a custom widget, then you might as well use ModelForm
     model = Task
