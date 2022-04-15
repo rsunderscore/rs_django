@@ -285,9 +285,14 @@ through_defaults={'role': 'EDITOR'})` pg 111
 
 	
 ## sessions
-- cookie based, file based, or db based
+- cookie based, file based, or db based - SESSION_ENGINE in settings.py
 - there are laws about sites notifying about cookies now - make sure to notify
 - request.session
+- pickle vs JSON for storage  - configured via SESSION_SERIALIZER
+- parts: key, data, expire_date
+- storing: `request.session['keyname'] = value` (or pass a dict to request.session)
+- retrieve: `var = requset.session.get('keyname', []) #common to use [] as default`
+- `{% empty %}` tag for template handles condition when var is empty in a loop
 
 ## custom tags and filters
 	
