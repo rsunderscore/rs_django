@@ -11,6 +11,7 @@ Reference [book code] (https://github.com/PacktPublishing/Web-Development-with-D
 5. python manage.py runserver pg 4
 	- python manage.py shell pg 105 - invoke a shell in app context
 5. starting folder layout
+<pre>
 projname
 /projname
 	| __init__.py
@@ -31,7 +32,7 @@ projname
 	| views.py
 | db.sqlite3
 | manage.py
-
+</pre>
 
 QueryDict
 - bracket notation - keyError if missing
@@ -290,7 +291,26 @@ through_defaults={'role': 'EDITOR'})` pg 111
 
 ## custom tags and filters
 	
-## REST
+## REST (API using JSON)
+- separate api views into their own file (api_views.py)
+1. `pip install djangorestframework`
+2. add rest_framework to isntalled_apps (settings.py)
+3. import `rest_framework.decorators` api_view and Response
+4. decorate a view with api_view and use Resopnse to return a dict and it will be converted to a JSON
+5. update urls with a path for the view
+	- when viewed in the browser the result is formatted
+- can use serializers to convert between output types e.g. rest_framework.serializers
+	- create custom serializers in serializers.py - similar fields to forms e.g. CharField, DateField, EmailField
+	- run serializer on an object and then pass result.data to Response to get JSON
+	- serializers has a ModelSerializer than can bet extended
+		- specify the model and fields in a Meta subclass
+- Viewsets/Routers (sub-component of django rest framework)
+	- combines list and details views
+	- extend viewsets.ModelViewset  ans set serializer_class and queryset (the model name)
+	- `router.register(r'name', xxxViewSet)`
+	- `urlpatterns = router.urls` - detail view becomes name/<id> and list view is just /name/
+	- in views.py import DefaultRouter from rest_framework.routers and then add a `path('api/', include(router.urls), 'api')`
+
 
 ## Browser Debug toolbar (i.e. DjDt)
 provides large amounts of information about page parameters, state, db, load times, etc...
