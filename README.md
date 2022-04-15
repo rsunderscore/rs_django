@@ -295,6 +295,28 @@ through_defaults={'role': 'EDITOR'})` pg 111
 - `{% empty %}` tag for template handles condition when var is empty in a loop
 
 ## custom tags and filters
+1. create a folder called 'templatetags' #default name auto-searched by django
+1. create custom_filter.py or custom_tags.py
+1. `from django import template`
+1. `register = template.Library()`
+- filters
+	- function that accepts a var (can also have more args, but first param is always the var from the tag) - shoudl return a string
+	- decroate function with `@register.filter`
+		- can pass context by adding `takes_context=True` to the decorator
+	- args are specified after a colon when used e.g. `{{ some_value | filter:'arg' }}`
+	- stringfilter - special case that ensures that the input is a string (converts if not) 
+		- from django.template.defaultfilters import stringfilter
+		- used as decorator on the filter
+- tags - two types of tags implementations - create in a template_tags directory
+	- simple - render in same template
+		- decorate a function with @register.simple_tag
+		- params are space separated after tha nem when used in the template e.g. `{% mytag 'arg1' var %}`
+	-inclusion -  calls an additional template that renders with the provided information and replaces the tag
+		- e.g. use-case: adding custom widgets to a page
+		- `@inclusion_tag('templatename.html')` decorator
+			- template specified should exist in the templates dir
+		- function should return a dict that is used as the context for the sepcified template
+- in template need to {% load pyfilename %} - can load multiple modules in series (separate with spaces)
 	
 ## REST (API using JSON)
 - separate api views into their own file (api_views.py)
