@@ -20,9 +20,12 @@ class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
         #'isdone'
-        fields = ['isdone', 'name', 'details', 'due_date', 'weblink', 'assignee']#fields = '__all__' #fields to include
+        fields = ['isdone', 'name', 'details', 'due_date', 'weblink', 'assignee', 'creator']#fields = '__all__' #fields to include
         #exclude = None #fields to exclude
         widgets = {'name':forms.TextInput(attrs={'placeholder':'task name'}),
                    'due_date':forms.DateInput(attrs={'type':'date'}),
-                   
+                   'creator':forms.TextInput(attrs={'readonly':True}),
                    }
+        
+#disable editing of form fields with wdget.atrrs['readonly'] = True
+# set value of disabled field by setting initial 

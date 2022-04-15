@@ -29,3 +29,6 @@ class Task(models.Model):
 #    User
     # AUTH_USER_MODEL
     # get_user_model()
+    
+#disable editing of form fields with wdget.atrs['readonly'] = True
+# set value of disabled field by setting initial 

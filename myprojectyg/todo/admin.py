@@ -15,3 +15,14 @@ from todo.models import Person, Task
 # Register your models here.
 admin.site.register(Person, PersonAdmin)
 admin.site.register(Task, TaskAdmin)
+
+
+from esp.models import Vocab
+
+class VocabAdmin(admin.ModelAdmin):
+    list_display = ('eng', 'esp', 'pos', 'sub_date', 'user')
+    list_filter = ('user', )
+    date_hierarchy = ('sub_date')
+    search_fields = ('eng', 'esp', 'user')
+    
+admin.site.register(Vocab, VocabAdmin)
