@@ -11,6 +11,7 @@ Reference [book code] (https://github.com/PacktPublishing/Web-Development-with-D
 5. python manage.py runserver pg 4
 	- python manage.py shell pg 105 - invoke a shell in app context
 5. starting folder layout
+<pre>
 projname
 /projname
 	| __init__.py
@@ -31,7 +32,7 @@ projname
 	| views.py
 | db.sqlite3
 | manage.py
-
+</pre>
 
 QueryDict
 - bracket notation - keyError if missing
@@ -70,6 +71,15 @@ views - should prepare any data necessary for the template and pass it in the co
 		- UpdateView - 
 		- DeleteView (pg 563)
 
+### SECRET_KEY pg 675
+- 3rd party lib django Configurations has a values.SecretValue module
+- store in ENV variable and retrieve with os.environ.get('keyname', default)
+- 50 character random string
+- get a new secret key by using get_random_secret_key from django.core.management.utils
+	- get_random_string - specify a length as first param - 
+	- uses python standard lib secrets module - cryptographically strong random numbers suitable for managing data such as passwords, account authentication, security tokens, and related secrets
+- why are there so many web based apps to generate this key?
+
 ## static files
 - django not intended to serve static - standard web server would do that - just a stopgap for dev purposes
 	- also facilitates locating files - change a value in settings.py to remap files - value to be changed varies based on the finder
@@ -81,137 +91,29 @@ views - should prepare any data necessary for the template and pass it in the co
 - finder - utility that translate url location to asset location on disk
 	- AppDirectoriesFinder - searches app subdirectories (static folder) for assets
 	- FileSystemFinder - searches specified folder locations (e.g. for assets shared across multiple apps)
-	
-## MEDIA - uploads, files/images
-- SETTINGS
-- store on disk directly
-- store on disk with path in a model
 
-## integration with frontend JavaScript (Ch 15)
-- e.g. React
-
-## styles
+### styles
 - bootstrap (p 146) - https://getbootstrap.com/docs/4.4/getting-started/introduction/
 	- https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
 - specifc styles provided via classes (e.g. btn-primary)
 - other styles served as static files
 
-## admin - CRUD operations 
-- usually sufficient for smaller apps
-- need to register models for them to appear in the interface - update the admin.py file
-	- import the model classes
-	- admin.site.register(modelname) for each model
-- subclass AdminSite and AdminConfig to integrate app adminstration with users/groups admin
-	- auto-discovery integration with native is done by (combination of book and django docs)
-		- create an admin.py in root folder (root of the project - not the app subdir)
-			- define a child class of admin.AdminSite
-			- can customize title_header, site_header, and index_title
-		- create an apps.py in root folder with a class instance
-			- create a sublcass of `django.contrib.admin.apps` AdminConfig class with default_site set to 'admin.NewAdminName' (from your admin.py file)
-		- modify installed apps in config to point  to the new apps file and the config class - e.g. 'apps.myCustomAdminConfig', 
-	- "When you put 'django.contrib.admin' in your INSTALLED_APPS setting, Django automatically looks for an admin module in each application and imports it." - https://docs.djangoproject.com/en/4.0/ref/contrib/admin/
-		- AdminConfig calls autodiscover when imported (which gets admin.py files in app subdirs)
-		- overriding default admin site = https://docs.djangoproject.com/en/4.0/ref/contrib/admin/#overriding-default-admin-site
-- subclass ModelAdmin (appname/admin.py) to customize model list and detail views
-	- create a subclass of ModelAdmin for each model type in appname/admin.py
-	- when registering the model add a second param for the new subclass e.g. `admin.site.register(Book, BookAdmin)`
-	- list_display - default listing is based on the __str__ function defined in the model (pg 198)
-		- set `list_display = ` - any of these work:
-			- `('field1','field2')`#a tuple of fields from the model taht you want
-			- function that takes the model instance as arg 
-			- Method from ModelAdmin subclass that takes model as arg
-			- method of the model class (if it accepts model obj as arg i.e. self)
-		- computed fields cannot be sorted in the admin interface (e.g. reformatted)
-		- cannot include a Many-to-many field
-		- list_filter
-			- enabling a drop-down for the provided fields that limits displayed records -  controlled with list_filter attribute of a ModelAdmin subclass
-		- date_hierarchy - filters rows by date with links above the table display
-		- search_fields - enables the search box to look for text in the specified fields
-			- use two underscores to search on a foreign_key field (e.g. 'publisher__name')
-			- default is contains - append '__exact' to fields that should be matched exactly (e.g. isbn__exact)
-			- can also use '__startswith' appended to field name
-	- customizing detail views
-		- hide fields 
-			- will be hidden if model field is defined with auto (e.g. auto_now_add for a date field)
-			- `exclude = ('field1', 'field2'...)` in the subclass of modelAdmin
-			- `fields = ('list', 'of', 'fields', ...)` can be used to include only specified fields if it is easier than excluding
-			- `fieldsets = ` iter of group names followed by a dict with {'fields':('field1' ,'field2') to produce an interface with fields grouped and ordered
 
-##auth
- - re-using the admin auth templates - not working as described  :rage1:
-	- login works because it's not in the admin path for registration - but the others default to using the admin template rather than the app template - not sure why
-		- corrected an issue with urls.py syntax when import auth.urls to tha accounts namespace (paren mismatch)
-	1. add to urls.py urlpatterns `path('accounts', include(('django.contrib.auth.urls','auth'),namespace='accounts')),`
-		1. routes: login, logout, password_change, password_change/done, password_reset, password_reset/done, rest/<uidb64>/<token>, reset/done, 
-	1. copy common views from django admin package to templates/registration
-		1. everything in <envloc>\lib\site-packages\django\contrib\admin\templates\registration
-			1. full list(8 html files): password_reset_email, password_change_form, password_change_done, password_reset_form, password_reset_done, password_reset_confirm, password_reset_complete, logged_out
-		1. login.html from <envloc>\lib\site-packages\django\contrib\admin\templates\admin
-		1. envloc can be determined by running `import sys` and then `sys.path`
-	1. to verify routing and templates are functioning, go to:  127.0.0.1:8000/accounts/login 
-	1. modify the copied templates to go with your site - e.g. 
-		1. extend base.html rather than admin/base_site.html
-		1. copy conent_title and reset_link block text into content block
-		1. remove unused blocks
-		1. replace reverse urls with namespaced equivalents (e.g. 'login' becomes 'accounts:login')
-			1. in some cases the url is set in a variable that is later reference
-		1. login.html 
-			1. ok to remove all blocks except content
-	1. add a profile view and template (login redirects to it by default)
-- use this instead? https://docs.djangoproject.com/en/4.0/topics/auth/default/
-- https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Authentication - this WORKS :tada:
-	- `path('accounts/', include('django.contrib.auth.urls'))`
-	- they suggestion putting registration stuff in a tempaltes subfolder off of project directory and then adding that directory to DIRS in TEMPLATES in settings.py e.g. `os.path.join(BASE_DIR, 'templates')`
-- access is controlled via the views
-	- decorators from from django.contrib.auth.decorators import 
-		- login_required - redirect user to login then come back here 
-			- login_url param - where to redirect after login (default is page redirected from)
-			- redirect_field_argument param - what the redirect param will be within url (default: next=)
-		- permission_required - limit access to a user with specific permission level e.g. @permission_required('view_group')
-		- user_passes_test - uses a function that takes user as input to pull information about the user and test it - returns False or Truthy (e.g. non-zero) - used for more flexible control of auth
-		- method_decorator - needed if you have a class based view
-	- can also manually invoke `redirect_to_login` function for even more control
-	- check in templates for request.user == AnonymousUser (means they didn't login) or user.is_authenticated
-
-	
-	
-## sessions
-- cookie based, file based, or db based
-- there are laws about sites notifying about cookies now - make sure to notify
-- request.session
-
-## custom tags and filters
-
-
-## REST
-
-## forms
-- look this up
-- csrf token - cross-site request forgery
-	- look this up
-- request.method passed in context dict as 'method': request.method
-	- data passed with request.GET or request.POST QueryDict
-- custom validation - solution to choose varies by use case
-	- override clean method in form class - use `self.add_error('field', 'msg')`
-	- add a per-field clean method (e.g. `clean_username(self)` and raise django.core.exceptions.ValidationError for issues; **must** return value)
-	- add custom validation function that takes value as param and raises ValidationError for issues (no return) 
-- attrs - a form field attribute that takes a dict of additional settings
-	-"placeholder" - added with placeholder attribute to the form field
--initial values - added with initial attribute to the form field
-	- can also be set with initial attribute to Form - dict of field names and values
-- ModelForms - used to auto create forms from models `class modelnameForm(forms.ModelForm): class Meta: model=modelname fields=('tuple','of','fieldnames')`
-	- fields can be '__all__' to use all fields
-	- include a subclass Meta with attributes to specify the model to use and the fields to include (or exclude)
-		- best to avoid exclude so that special fields are not accidentally exposed
-- use crispy forms package to integrate with CSS and bootstrap (prettier forms)
-
-## templates
-- html files with special tags for vars {{ }} and logic {% %}
-- inheritance
-- ideally each app will have its own child templates folder 
-- shared templates in the root folder
-- custom template tags
-	 - live inside the templatetags subdir for each app
+## MEDIA - uploads, files/images
+- SETTINGS
+- store on disk directly
+- store on disk with path in a model
+1. settings.py 
+	- add a new option to options key of templates setting of  `django.template.context_processors.media`
+	- after STATIC_URL setting add two new settings
+		1. `MEDIA_ROOT = os.path.join(BASE_DIR, 'media')`
+		1. `MEDIA_URL = '/media/' #note trailing slash included so not needed when used`
+	- urls.py 
+		- import settings `from django.conf`
+		- import static from `django.conf.urls.static`
+		- add a conditional if settings.DEBUG section after urlpatterns
+			- append to urlpatterns (+=) `static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT`
+			- 
 
 ## models
 - tables are defined as classes that extend models.Model
@@ -272,14 +174,170 @@ through_defaults={'role': 'EDITOR'})` pg 111
 	- can append a space separated list of tables to look examine
 	- flag to include-views
 
-### SECRET_KEY pg 675
-- 3rd party lib django Configurations has a values.SecretValue module
-- store in ENV variable and retrieve with os.environ.get('keyname', default)
-- 50 character random string
-- get a new secret key by using get_random_secret_key from django.core.management.utils
-	- get_random_string - specify a length as first param - 
-	- uses python standard lib secrets module - cryptographically strong random numbers suitable for managing data such as passwords, account authentication, security tokens, and related secrets
-- why are there so many web based apps to generate this key?
+
+## admin - CRUD operations 
+- usually sufficient for smaller apps
+- need to register models for them to appear in the interface - update the admin.py file
+	- import the model classes
+	- admin.site.register(modelname) for each model
+- subclass AdminSite and AdminConfig to integrate app adminstration with users/groups admin
+	- auto-discovery integration with native is done by (combination of book and django docs)
+		- create an admin.py in root folder (root of the project - not the app subdir)
+			- define a child class of admin.AdminSite
+			- can customize title_header, site_header, and index_title
+		- create an apps.py in root folder with a class instance
+			- create a sublcass of `django.contrib.admin.apps` AdminConfig class with default_site set to 'admin.NewAdminName' (from your admin.py file)
+		- modify installed apps in config to point  to the new apps file and the config class - e.g. 'apps.myCustomAdminConfig', 
+	- "When you put 'django.contrib.admin' in your INSTALLED_APPS setting, Django automatically looks for an admin module in each application and imports it." - https://docs.djangoproject.com/en/4.0/ref/contrib/admin/
+		- AdminConfig calls autodiscover when imported (which gets admin.py files in app subdirs)
+		- overriding default admin site = https://docs.djangoproject.com/en/4.0/ref/contrib/admin/#overriding-default-admin-site
+- subclass ModelAdmin (appname/admin.py) to customize model list and detail views
+	- create a subclass of ModelAdmin for each model type in appname/admin.py
+	- when registering the model add a second param for the new subclass e.g. `admin.site.register(Book, BookAdmin)`
+	- list_display - default listing is based on the __str__ function defined in the model (pg 198)
+		- set `list_display = ` - any of these work:
+			- `('field1','field2')`#a tuple of fields from the model taht you want
+			- function that takes the model instance as arg 
+			- Method from ModelAdmin subclass that takes model as arg
+			- method of the model class (if it accepts model obj as arg i.e. self)
+		- computed fields cannot be sorted in the admin interface (e.g. reformatted)
+		- cannot include a Many-to-many field
+		- list_filter
+			- enabling a drop-down for the provided fields that limits displayed records -  controlled with list_filter attribute of a ModelAdmin subclass
+		- date_hierarchy - filters rows by date with links above the table display
+		- search_fields - enables the search box to look for text in the specified fields
+			- use two underscores to search on a foreign_key field (e.g. 'publisher__name')
+			- default is contains - append '__exact' to fields that should be matched exactly (e.g. isbn__exact)
+			- can also use '__startswith' appended to field name
+	- customizing detail views
+		- hide fields 
+			- will be hidden if model field is defined with auto (e.g. auto_now_add for a date field)
+			- `exclude = ('field1', 'field2'...)` in the subclass of modelAdmin
+			- `fields = ('list', 'of', 'fields', ...)` can be used to include only specified fields if it is easier than excluding
+			- `fieldsets = ` iter of group names followed by a dict with {'fields':('field1' ,'field2') to produce an interface with fields grouped and ordered
+
+
+## Authentication/Authorization
+ - re-using the admin auth templates - not working as described  :rage1:
+	- login works because it's not in the admin path for registration - but the others default to using the admin template rather than the app template - not sure why
+		- corrected an issue with urls.py syntax when import auth.urls to tha accounts namespace (paren mismatch)
+	1. add to urls.py urlpatterns `path('accounts', include(('django.contrib.auth.urls','auth'),namespace='accounts')),`
+		1. routes: login, logout, password_change, password_change/done, password_reset, password_reset/done, rest/<uidb64>/<token>, reset/done, 
+	1. copy common views from django admin package to templates/registration
+		1. everything in <envloc>\lib\site-packages\django\contrib\admin\templates\registration
+			1. full list(8 html files): password_reset_email, password_change_form, password_change_done, password_reset_form, password_reset_done, password_reset_confirm, password_reset_complete, logged_out
+		1. login.html from <envloc>\lib\site-packages\django\contrib\admin\templates\admin
+		1. envloc can be determined by running `import sys` and then `sys.path`
+	1. to verify routing and templates are functioning, go to:  127.0.0.1:8000/accounts/login 
+	1. modify the copied templates to go with your site - e.g. 
+		1. extend base.html rather than admin/base_site.html
+		1. copy conent_title and reset_link block text into content block
+		1. remove unused blocks
+		1. replace reverse urls with namespaced equivalents (e.g. 'login' becomes 'accounts:login')
+			1. in some cases the url is set in a variable that is later reference
+		1. login.html 
+			1. ok to remove all blocks except content
+	1. add a profile view and template (login redirects to it by default)
+- use this instead? https://docs.djangoproject.com/en/4.0/topics/auth/default/
+- https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Authentication - this WORKS :tada:
+	- `path('accounts/', include('django.contrib.auth.urls'))`
+	- they suggestion putting registration stuff in a tempaltes subfolder off of project directory and then adding that directory to DIRS in TEMPLATES in settings.py e.g. `os.path.join(BASE_DIR, 'templates')`
+- access is controlled via the views
+	- decorators from from django.contrib.auth.decorators import 
+		- login_required - redirect user to login then come back here 
+			- login_url param - where to redirect after login (default is page redirected from)
+			- redirect_field_argument param - what the redirect param will be within url (default: next=)
+		- permission_required - limit access to a user with specific permission level e.g. @permission_required('view_group')
+		- user_passes_test - uses a function that takes user as input to pull information about the user and test it - returns False or Truthy (e.g. non-zero) - used for more flexible control of auth
+		- method_decorator - needed if you have a class based view
+	- can also manually invoke `redirect_to_login` function for even more control
+	- check in templates for request.user == AnonymousUser (means they didn't login) or user.is_authenticated
+
+
+## forms
+- look this up
+- csrf token - cross-site request forgery
+	- look this up
+- request.method passed in context dict as 'method': request.method
+	- data passed with request.GET or request.POST QueryDict
+- custom validation - solution to choose varies by use case
+	- override clean method in form class - use `self.add_error('field', 'msg')`
+	- add a per-field clean method (e.g. `clean_username(self)` and raise django.core.exceptions.ValidationError for issues; **must** return value)
+	- add custom validation function that takes value as param and raises ValidationError for issues (no return) 
+- attrs - a form field attribute that takes a dict of additional settings
+	-"placeholder" - added with placeholder attribute to the form field
+-initial values - added with initial attribute to the form field
+	- can also be set with initial attribute to Form - dict of field names and values
+- ModelForms - used to auto create forms from models `class modelnameForm(forms.ModelForm): class Meta: model=modelname fields=('tuple','of','fieldnames')`
+	- fields can be '__all__' to use all fields
+	- include a subclass Meta with attributes to specify the model to use and the fields to include (or exclude)
+		- best to avoid exclude so that special fields are not accidentally exposed
+- use crispy forms package to integrate with CSS and bootstrap (prettier forms)
+
+## templates
+- html files with special tags for vars {{ }} and logic {% %}
+- inheritance
+- ideally each app will have its own child templates folder 
+- shared templates in the root folder
+- custom template tags
+	 - live inside the templatetags subdir for each app
+
+
+	
+## sessions
+- cookie based, file based, or db based - SESSION_ENGINE in settings.py
+- there are laws about sites notifying about cookies now - make sure to notify
+- request.session
+- pickle vs JSON for storage  - configured via SESSION_SERIALIZER
+- parts: key, data, expire_date
+- storing: `request.session['keyname'] = value` (or pass a dict to request.session)
+- retrieve: `var = requset.session.get('keyname', []) #common to use [] as default`
+- `{% empty %}` tag for template handles condition when var is empty in a loop
+
+## custom tags and filters
+1. create a folder called 'templatetags' #default name auto-searched by django
+1. create custom_filter.py or custom_tags.py
+1. `from django import template`
+1. `register = template.Library()`
+- filters
+	- function that accepts a var (can also have more args, but first param is always the var from the tag) - shoudl return a string
+	- decroate function with `@register.filter`
+		- can pass context by adding `takes_context=True` to the decorator
+	- args are specified after a colon when used e.g. `{{ some_value | filter:'arg' }}`
+	- stringfilter - special case that ensures that the input is a string (converts if not) 
+		- from django.template.defaultfilters import stringfilter
+		- used as decorator on the filter
+- tags - two types of tags implementations - create in a template_tags directory
+	- simple - render in same template
+		- decorate a function with @register.simple_tag
+		- params are space separated after tha nem when used in the template e.g. `{% mytag 'arg1' var %}`
+	-inclusion -  calls an additional template that renders with the provided information and replaces the tag
+		- e.g. use-case: adding custom widgets to a page
+		- `@inclusion_tag('templatename.html')` decorator
+			- template specified should exist in the templates dir
+		- function should return a dict that is used as the context for the sepcified template
+- in template need to {% load pyfilename %} - can load multiple modules in series (separate with spaces)
+	
+## REST (API using JSON)
+- separate api views into their own file (api_views.py)
+1. `pip install djangorestframework`
+2. add rest_framework to isntalled_apps (settings.py)
+3. import `rest_framework.decorators` api_view and Response
+4. decorate a view with api_view and use Resopnse to return a dict and it will be converted to a JSON
+5. update urls with a path for the view
+	- when viewed in the browser the result is formatted
+- can use serializers to convert between output types e.g. rest_framework.serializers
+	- create custom serializers in serializers.py - similar fields to forms e.g. CharField, DateField, EmailField
+	- run serializer on an object and then pass result.data to Response to get JSON
+	- serializers has a ModelSerializer than can bet extended
+		- specify the model and fields in a Meta subclass
+- Viewsets/Routers (sub-component of django rest framework)
+	- combines list and details views
+	- extend viewsets.ModelViewset  ans set serializer_class and queryset (the model name)
+	- `router.register(r'name', xxxViewSet)`
+	- `urlpatterns = router.urls` - detail view becomes name/<id> and list view is just /name/
+	- in views.py import DefaultRouter from rest_framework.routers and then add a `path('api/', include(router.urls), 'api')`
+
 
 ## Browser Debug toolbar (i.e. DjDt)
 provides large amounts of information about page parameters, state, db, load times, etc...
@@ -292,17 +350,6 @@ provides large amounts of information about page parameters, state, db, load tim
 1. urls.py - add `path('__debug__/', include(debug_toolbar.urls))` add to the end of the list in DEBUG section
 
 
-## MEDIA (i.e) uploads
-1. settings.py 
-	- add a new option to options key of templates setting of  `django.template.context_processors.media`
-	- after STATIC_URL setting add two new settings
-		1. `MEDIA_ROOT = os.path.join(BASE_DIR, 'media')`
-		1. `MEDIA_URL = '/media/' #note trailing slash included so not needed when used`
-	- urls.py 
-		- import settings `from django.conf`
-		- import static from `django.conf.urls.static`
-		- add a conditional if settings.DEBUG section after urlpatterns
-			- append to urlpatterns (+=) `static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT`
 		
 ### Misc
 - x-frames-options - used to prevent clickjacking, most browsers / sites use x-frames-options deny so that each page cannot be embedded in a frame
