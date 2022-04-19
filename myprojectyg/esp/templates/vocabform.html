@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1> this is the vocab form page </h1>
+<p> Hey {{ user.username }}, you got a word for me?
+</p>
+
+{% comment %} enctype='multipart/form-data' is only needed for file uploads{% endcomment %}
+<form method='POST' >
+	{% csrf_token %}
+	{{ form.as_p }}
+	<button type='submit'>Submit</button> 
+	<a href = '/esp/'>go back home</a>
+</form>
+{% endblock %}

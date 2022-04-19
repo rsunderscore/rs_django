@@ -1,0 +1,15 @@
+{% extends 'espbase.html' %}
+
+{% block content %}
+
+<table border =1 cellpadding=4>
+<tr><th>espanol</th><th>english</th><th>part-of-speech</th><th>sub_date</th><th>user</th></tr>
+
+{% for word in vocab %}
+	<tr><td>{{ word.esp}}</td><td>{{ word.eng }}</td><td>{{ word.pos }}</td><td>{{ word.sub_date }}</td><td>{{ word.user }}</td></tr>
+{% empty %}
+	<h3> no words in the db</h3>
+{% endfor %}
+
+</table>
+{% endblock %}

@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 import debug_toolbar
 
 
+
 urlpatterns = [
     path('accounts/', include(('django.contrib.auth.urls','auth'), namespace='accounts')),
     path('admin/', admin.site.urls),
@@ -37,6 +38,7 @@ urlpatterns = [
     path('showform2.html', todo.views.MyFormView),
     path('logouttest.html', todo.views.logoutTest),
     path('CBVtest', todo.views.MyView.as_view(), name='index_view'),
+    path('esp/', include(('esp.urls', 'esp'), namespace = 'espanol')), 
 ]
 
 if settings.DEBUG:
