@@ -11,6 +11,13 @@ Reference [book code] (https://github.com/PacktPublishing/Web-Development-with-D
 5. python manage.py runserver pg 4
 	- python manage.py shell pg 105 - invoke a shell in app context
 5. starting folder layout
+
+todo
+1. get user to populate automatically in the form
+	1. do this by manually creating a text or hidden input in the template
+	1. set with javascript after page load?
+1. something else.
+
 <pre>
 projname
 /projname
@@ -307,6 +314,7 @@ through_defaults={'role': 'EDITOR'})` pg 111
 	- stringfilter - special case that ensures that the input is a string (converts if not) 
 		- from django.template.defaultfilters import stringfilter
 		- used as decorator on the filter
+	- *note* params passed to filter must be immediately after the colon (space will throw an error that 'not enough parameters were provided')
 - tags - two types of tags implementations - create in a template_tags directory
 	- simple - render in same template
 		- decorate a function with @register.simple_tag
@@ -349,7 +357,10 @@ provides large amounts of information about page parameters, state, db, load tim
 	- verify that STATICFILES_DIRS is defined (e.g. `[os.path.join(BASE_DIR, 'static' )]` and that the directory exists (<projdir>/static)
 1. urls.py - add `path('__debug__/', include(debug_toolbar.urls))` add to the end of the list in DEBUG section
 
-
+## including images
+	- bokeh - embed html
+	- plotly - embed html
+	- matplotlib - write to StringIO as svg then pass the output to the template to render in tag `{{ chart | safe }}`
 		
 ### Misc
 - x-frames-options - used to prevent clickjacking, most browsers / sites use x-frames-options deny so that each page cannot be embedded in a frame
