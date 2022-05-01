@@ -1,0 +1,23 @@
+{% extends 'espbase.html' %}
+
+{% block content %}
+<h3> are you sure you want to delete</h3>
+<table border = 1 cellpadding=5>
+	<tr><td>id</td><td>{{ object.id }}</td></tr>
+	<tr><td>español</td><td>{{ object.esp }}</td></tr>
+	<tr><td>english</td><td>{{ object.eng }}</td></tr>
+	<tr><td>entered by</td><td>{{ object.user.username }}</td></tr>
+</table>
+{% for i in object.items %}
+	{{ i }}<br>
+{% endfor %}
+<form method="POST">
+	{% csrf_token %}
+	Do you want to delete the book record?
+	<input type="submit" value="Delete record" />
+	<button onclick ="history.back();">cancel</button>
+
+</form>
+
+<button onclick = 'location.href="/esp/"';>go HOME</button>
+{% endblock%}

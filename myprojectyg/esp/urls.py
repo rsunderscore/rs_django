@@ -14,5 +14,8 @@ urlpatterns = [
     path('success/', SuccessView.as_view()),
     path('new_word.html', VocabCreateView.as_view()),
     path('new_word2.html', views.vocabCreateView),
+    path('delete_word/<int:pk>', views.VocabDeleteView.as_view()),
+    path('update_word/<int:pk>', views.VocabUpdateView.as_view()),
+    #path('vocab_confirm_delete.html', ),
     path('vocab/', vocabListView)
     ]

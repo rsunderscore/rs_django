@@ -357,7 +357,7 @@ provides large amounts of information about page parameters, state, db, load tim
 	- verify that STATICFILES_DIRS is defined (e.g. `[os.path.join(BASE_DIR, 'static' )]` and that the directory exists (<projdir>/static)
 1. urls.py - add `path('__debug__/', include(debug_toolbar.urls))` add to the end of the list in DEBUG section
 
-## including images
+## including charts
 	- bokeh - embed html
 	- plotly - embed html
 	- matplotlib - write to StringIO as svg then pass the output to the template to render in tag `{{ chart | safe }}`
