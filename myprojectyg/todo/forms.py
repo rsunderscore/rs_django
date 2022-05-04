@@ -24,7 +24,7 @@ class TaskForm(forms.ModelForm):
         #exclude = None #fields to exclude
         widgets = {'name':forms.TextInput(attrs={'placeholder':'task name'}),
                    'due_date':forms.DateInput(attrs={'type':'date'}),
-                   'creator':forms.TextInput(attrs={'readonly':True}),
+                   'creator':forms.HiddenInput(),#(attrs={'readonly':True}
                    }
         
 #disable editing of form fields with wdget.atrrs['readonly'] = True

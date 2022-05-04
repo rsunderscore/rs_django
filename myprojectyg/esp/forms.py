@@ -27,8 +27,8 @@ class VocabForm(forms.ModelForm):
         widgets = {'eng':forms.TextInput(attrs={'placeholder':'word'}),
            'esp':forms.TextInput(attrs={'placeholder':'la palabra'}),
            'pos':forms.Select(choices = POS_CHOICES),
-           'user':forms.TextInput(attrs={'readonly':True})#
-           }
+           'user':forms.HiddenInput()#attrs={ }'disabled':True, 'hidden': True, 'readonly':True - just locks it - doesnt' gray it out
+           }#if user is hidden do I really need the extra form (for update) to exclude it - or just reuse this one?
 
 class VocabFormNoUser(forms.ModelForm):
     class Meta:

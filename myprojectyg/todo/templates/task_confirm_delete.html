@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3> are you sure you want to delete</h3>
+<table border = 1 cellpadding=5>
+	<tr><td>id</td><td>{{ object.id }}</td></tr>
+	<tr><td>name</td><td>{{ object.name }}</td></tr>
+	<tr><td>details</td><td>{{ object.details }}</td></tr>
+	<tr><td>creation date</td><td>{{ object.creation_date }}</td></tr>
+	<tr><td>assignee</td><td>{{ object.assignee }}</td></tr>
+	<tr><td>creator</td><td>{{ object.creator.username }}</td></tr>
+</table>
+{% for i in object.items %}
+	{{ i }}<br>
+{% endfor %}
+<form method="POST">
+	{% csrf_token %}
+	Do you want to delete the task, {{ object.name }}?
+	<input type="submit" value="Delete" />
+	<button onclick ="history.back();">cancel</button>
+
+</form>
+
+<button onclick = 'location.href="/"';>go HOME</button>
+{% endblock %}

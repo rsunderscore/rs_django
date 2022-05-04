@@ -68,8 +68,26 @@ class TodoCreateView(CreateView):
     template_name = 'TodoForm.html'
     success_url = 'simple.html'
     form_class = TaskForm
+    #initial = {'name':self.request.user.id}
     
+    def get(self, request, *args, **kwargs):
+        self.__class__.initial={'creator':request.user.id}
+        return super().get(request, *args, **kwargs)
 
+@method_decorator(login_required, name='dispatch')
+class TodoDeleteView( DeleteView):
+    #looks for confirmation by default doesn't search template dir - need a url?
+    model=Task
+    fields = ['name', 'details', 'assignee', 'creator', 'creation_date']
+    template_name = 'task_confirm_delete.html'
+    success_url = '/simple.html' #full url needed if id is passed 
+    
+@method_decorator(login_required, name='dispatch' )
+class TodoUpdateView(UpdateView):
+    model= Task
+    template_name = 'TodoForm.html'
+    success_url = '/simple.html'
+    form_class = TaskForm
 
 def taskView(request):
     

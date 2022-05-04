@@ -38,6 +38,8 @@ urlpatterns = [
     path('showform2.html', todo.views.MyFormView),
     path('logouttest.html', todo.views.logoutTest),
     path('CBVtest', todo.views.MyView.as_view(), name='index_view'),
+    path('update_task/<int:pk>', todo.views.TodoUpdateView.as_view()),
+    path('delete_task/<int:pk>', todo.views.TodoDeleteView.as_view()),
     path('esp/', include(('esp.urls', 'esp'), namespace = 'espanol')), 
 ]
 

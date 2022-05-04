@@ -22,7 +22,7 @@ def vocabCreateView(request):
                 print(f"{name}: ({type(value)}) {value}")
             #do the insert?
             form.save()#retain new entry in DB
-            return redirect('success.html')
+            return redirect('success/')
     else:
         form = VocabForm(initial={'user':user})
         #form = form()
