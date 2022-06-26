@@ -375,5 +375,5 @@ provides large amounts of information about page parameters, state, db, load tim
 	- pypi page: https://pypi.org/project/mod-wsgi/
 	- more docs here: https://modwsgi.readthedocs.io/en/master/index.html
 		-  broken link (fow windows) that points roughly to this github repos https://github.com/GrahamDumpleton/mod_wsgi
-	
-	
+
+- htps://docs.djangoproject.com/en/4.0/howto/deployment/wsgi/modwsgi/
