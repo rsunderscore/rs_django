@@ -368,3 +368,12 @@ provides large amounts of information about page parameters, state, db, load tim
 - django messaging framework - https://docs.djangoproject.com/en/4.0/ref/contrib/messages/
 - book says class based views are better but almost all documentation is for function based views and hard to find solutions that work for CBVs as well
 	- e.g. rendering the result on the same page
+	
+	
+# integration with Apache
+- links
+	- pypi page: https://pypi.org/project/mod-wsgi/
+	- more docs here: https://modwsgi.readthedocs.io/en/master/index.html
+		-  broken link (fow windows) that points roughly to this github repos https://github.com/GrahamDumpleton/mod_wsgi
+	
+	
