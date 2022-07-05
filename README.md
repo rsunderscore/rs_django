@@ -295,6 +295,7 @@ through_defaults={'role': 'EDITOR'})` pg 111
 - cookie based, file based, or db based - SESSION_ENGINE in settings.py
 - there are laws about sites notifying about cookies now - make sure to notify
 - request.session
+
 - pickle vs JSON for storage  - configured via SESSION_SERIALIZER
 - parts: key, data, expire_date
 - storing: `request.session['keyname'] = value` (or pass a dict to request.session)
@@ -376,5 +377,17 @@ provides large amounts of information about page parameters, state, db, load tim
 	- more docs here: https://modwsgi.readthedocs.io/en/master/index.html
 		-  broken link (fow windows) that points roughly to this github repos https://github.com/GrahamDumpleton/mod_wsgi
 
-- htps://docs.djangoproject.com/en/4.0/howto/deployment/wsgi/modwsgi/
+- https://docs.djangoproject.com/en/4.0/howto/deployment/wsgi/modwsgi/
     - If you are running Windows, it is recommended you use the Apache distribution from Apache Lounge (www.apachelounge.com). 
+
+# apache and mod_wsgi install
+- [quick install guide](https://modwsgi.readthedocs.io/en/master/user-guides/quick-installation-guide.html) that describes how to compile
+- I also needed to `apt install apache-dev` in order to get the apxs library needed to compile mod_wsgi
+- add LoadModule to apache configuration
+	- some apache2 installs break out modules and configurations until a sub-folder structure - so the load file and conf file would go in modules avail folder and then enable with a2enmod and a2enconf commands described in httpd.conf
+- restart apache - e.g. service apache2 restart or apachectl restart or ...
+- additional configuration:
+	- WSGIScriptAlias /myapp /usr/local/www/wsgi-scripts/myapp.wsgi
+	- Directory /usr/local/www/wsgi-scripts
+	- AddHandler wsgi-script .wsgi
+	- possible 'delegate to daemon' config
