@@ -391,3 +391,12 @@ provides large amounts of information about page parameters, state, db, load tim
 	- Directory /usr/local/www/wsgi-scripts
 	- AddHandler wsgi-script .wsgi
 	- possible 'delegate to daemon' config
+	
+[libpython error](https://github.com/GrahamDumpleton/mod_wsgi/issues/338)
+ GrahamDumpleton commented on Jan 14, 2020
+The message is saying it can't find libpython3.7m.so.1.0 not the mod_wsgi.so file. See:
+    https://modwsgi.readthedocs.io/en/develop/user-guides/installation-issues.html#unable-to-find-python-shared-library
+In short, you are trying to use a Python installation in a non standard location, so you need to tell the build where it is. You can also fudge things by adding:
+LoadFile /some/path/libpython3.7m.so.1.0
+before the LoadModule line, where /some/path is replaced with the directory where Python library was installed.
+You may also need to set WSGIPythonHome directory to be what sys.prefix is set to for Python since not in standard location.
