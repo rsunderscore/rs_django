@@ -408,4 +408,13 @@ You may also need to set WSGIPythonHome directory to be what sys.prefix is set t
 	
 ### encodings module not found issue (Win10 with mod_wsgi-express)
 - On Windows, I solved this problem by putting the Lib directory of my Python installation directly on the PYTHONPATH. [link](https://stackoverflow.com/questions/24495348/mod-wsgi-importerror-no-module-named-encodings)
-- other sites talk about setting WSGIPythonPath and WSGIPythonHome in the httpd.conf 
+- other sites talk about setting WSGIPythonPath and WSGIPythonHome in the httpd.conf
+	- some sites indicate that WSGIPythonHome is ignored on windows
+- [this github post](https://github.com/GrahamDumpleton/mod_wsgi/issues/525) talks about the issue and recommends not using WSGIPythonHome and lins to [this post](https://github.com/GrahamDumpleton/mod_wsgi/issues/535) for updates
+	- both python and apache need to have same bitness (32 or 64) 
+	- activate_this method needed in the script if WSGIPythonHome is not used (if using virtualenv?) - add to wsgi.py in the app code
+	- site.addsitedir() is preferred to sys.path.append (b/c it does additional setup)
+		- site.addsitedir(VIRTUAL_ENV + '/Lib/site-packages')
+	- "The issue is that Apache on Windows, when run as a Service does not pick up the PYTHONHOME environment variable which it needs for the right Python installation to be used."
+		-Set a (global) System environment variable PYTHONHOME and then run Apache as a service
+	- "strongly recommend against using Anaconda Python on Windows if using mod_wsgi" - Graham Dumpleton
