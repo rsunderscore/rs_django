@@ -408,3 +408,4 @@ You may also need to set WSGIPythonHome directory to be what sys.prefix is set t
 	
 ### encodings module not found issue (Win10 with mod_wsgi-express)
 - On Windows, I solved this problem by putting the Lib directory of my Python installation directly on the PYTHONPATH. [link](https://stackoverflow.com/questions/24495348/mod-wsgi-importerror-no-module-named-encodings)
+- other sites talk about setting WSGIPythonPath and WSGIPythonHome in the httpd.conf 
