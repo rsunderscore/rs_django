@@ -405,3 +405,6 @@ LoadFile /some/path/libpython3.7m.so.1.0
 before the LoadModule line, where /some/path is replaced with the directory where Python library was installed.
 	
 You may also need to set WSGIPythonHome directory to be what sys.prefix is set to for Python since not in standard location.
+	
+### encodings module not found issue (Win10 with mod_wsgi-express)
+- On Windows, I solved this problem by putting the Lib directory of my Python installation directly on the PYTHONPATH. [link](https://stackoverflow.com/questions/24495348/mod-wsgi-importerror-no-module-named-encodings)
