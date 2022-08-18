@@ -418,3 +418,7 @@ You may also need to set WSGIPythonHome directory to be what sys.prefix is set t
 	- "The issue is that Apache on Windows, when run as a Service does not pick up the PYTHONHOME environment variable which it needs for the right Python installation to be used."
 		-Set a (global) System environment variable PYTHONHOME and then run Apache as a service
 	- "strongly recommend against using Anaconda Python on Windows if using mod_wsgi" - Graham Dumpleton
+
+
+https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Deployment
+
